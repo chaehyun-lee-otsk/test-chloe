@@ -13,8 +13,18 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  code_climate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Run Code Climate analysis
+        uses: codeclimate/codeclimate-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
+  build:
     runs-on: ubuntu-latest
 
     steps:
