@@ -27,4 +27,4 @@ jobs:
       - name: Upload coverage to Code Climate
         run: codeclimate-test-reporter < coverage.xml
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CODECLIMATE_REPO_TOKEN: ${{ secrets.CC_TEST_REPORTER_ID }}
