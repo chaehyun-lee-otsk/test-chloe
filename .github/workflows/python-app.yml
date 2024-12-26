@@ -28,5 +28,7 @@ jobs:
         run: |
           curl -X POST \
               -F "json_file=@coverage.xml" \
-              -H "Authorization: Token ${{ secrets.CC_TEST_REPORTER_ID }}" \
+              -H "Authorization: Token ${{ secrets.CODECLIMATE_REPO_TOKEN }}" \
               https://api.codeclimate.com/v1/test_reports
+        env:
+          CODECLIMATE_REPO_TOKEN: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
