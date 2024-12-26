@@ -1,38 +1,40 @@
-name: CI Workflow
+name: Test & Upload Coverage
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test:
+  test-and-upload:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      # Set up Python environment
+      - name: Set up Python environment
         uses: actions/setup-python@v3
         with:
           python-version: '3.9'
 
+      # Install dependencies
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install pytest pytest-cov
 
-      - name: Run tests and generate coverage report
+      # Run tests and generate coverage
+      - name: Run tests with coverage
         run: pytest --cov=src --cov-report=xml
 
-      - name: Upload coverage to Code Climate
-        run: |
-          curl -X POST \
-              -F "json_file=@coverage.xml" \
-              -H "Authorization: Token ${{ secrets.CODECLIMATE_REPO_TOKEN }}" \
-              https://api.codeclimate.com/v1/test_reports
-        env:
-            CODECLIMATE_REPO_TOKEN: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
-      - name: Test & publish code coverage
+      # Upload coverage to Code Climate
+      - name: Run Code Climate coverage
         uses: paambaati/codeclimate-action@v9.0.0
+        with:
+          coverageCommand: pytest --cov=src --cov-report=xml
         env:
-          CODECLIMATE_REPO_TOKEN: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
