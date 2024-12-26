@@ -25,6 +25,8 @@ jobs:
         run: pytest --cov=src --cov-report=xml
 
       - name: Upload coverage to Code Climate
-        run: codeclimate-test-reporter < coverage.xml
-        env:
-          CODECLIMATE_REPO_TOKEN: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          curl -X POST \
+              -F "json_file=@coverage.xml" \
+              -H "Authorization: Token ${{ secrets.CC_TEST_REPORTER_ID }}" \
+              https://api.codeclimate.com/v1/test_reports
